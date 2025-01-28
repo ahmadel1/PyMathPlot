@@ -1,4 +1,3 @@
-# main.py
 import sys
 from PySide2.QtWidgets import QApplication
 from src.model import FunctionModel
