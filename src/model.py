@@ -27,40 +27,22 @@ class FunctionModel:
 
     def _parse_function(self, expression):
         try:
-            # Replace '^' with '**' for exponentiation
             expression = expression.replace('^', '**')
             return sympify(expression, evaluate=False)
         except Exception as e:
             print(f"Error parsing expression: {e}")
             return None
 
-    def find_intersections(self, x_values):
+    def find_intersections(self, x_vals):
         if self.fx is None or self.gx is None:
-            return []
-
-        x_min = min(x_values)
-        x_max = max(x_values)
-
-        f_func = lambdify(self.x, self.fx, 'numpy')
-        g_func = lambdify(self.x, self.gx, 'numpy')
-        h_func = lambda x: f_func(x) - g_func(x)
-
-        x_vals = np.linspace(x_min, x_max, 1000)
-        h_vals = h_func(x_vals)
-
-        sign_changes = np.where(np.diff(np.sign(h_vals)))[0]
-
+            return []  
+        x_min = min(x_vals)
+        x_max = max(x_vals)
+        X= solve(self.fx - self.gx, self.x)
+        X = [float(i) for i in X]
         intersections = []
-        for idx in sign_changes:
-            x0 = x_vals[idx]
-            x1 = x_vals[idx + 1]
-            try:
-                root = fsolve(h_func, (x0 + x1) / 2)
-                x_root = root[0]
-                if x_min <= x_root <= x_max:
-                    y_root = f_func(x_root)
-                    intersections.append((x_root, y_root))
-            except Exception as e:
-                print(f"Error finding root between {x0} and {x1}: {e}")
-
+        for x in X:
+            y = float(self.gx.subs(self.x, x))
+            if not (x < x_min or x > x_max):
+                intersections.append((x, y))
         return intersections
