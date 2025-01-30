@@ -1,7 +1,6 @@
 from sympy import symbols, sympify, lambdify, solve, exp, pi
 import numpy as np
 from PySide2.QtWidgets import QMessageBox
-from scipy.optimize import fsolve
 
 class FunctionModel:
     def __init__(self):

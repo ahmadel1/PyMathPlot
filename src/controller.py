@@ -113,9 +113,24 @@ class MainController:
         if y_gx is not None:
             ax.plot(x_values, y_gx, label="g(x)", color="red")
 
+        x_values_for_zoom = [x for x, _ in intersections]
+        y_values_for_zoom = [y for _, y in intersections]
+        x_range = max(x_values_for_zoom) - min(x_values_for_zoom)
+        y_range = max(y_values_for_zoom) - min(y_values_for_zoom)
+
+        x_padding = 0.6 * x_range
+        y_padding = 0.6 * y_range
+        x_min_zoom = min(x_values_for_zoom) - x_padding
+        x_max_zoom = max(x_values_for_zoom) + x_padding
+        y_min_zoom = min(y_values_for_zoom) - y_padding
+        y_max_zoom = max(y_values_for_zoom) + y_padding
+
+        ax.set_xlim(x_min_zoom, x_max_zoom)
+        ax.set_ylim(y_min_zoom, y_max_zoom)
+      
         for x, y in intersections:
             ax.plot(x, y, 'ko')  
-            ax.annotate(f"({x:.2f}, {y:.2f})", xy=(x, y), textcoords="offset points", xytext=(10, 10))
+            ax.annotate(f"({x:.2f}, {y:.2f})", xy=(x, y), textcoords="offset points", xytext=(10, 10), ha='center', va='center')
 
         ax.grid()
         ax.legend()
