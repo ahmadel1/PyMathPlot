@@ -75,6 +75,9 @@ class MainWindow(QWidget):
         self.solutions_group.setLayout(self.solutions_layout)
         self.left_panel.addWidget(self.solutions_group)
         
+        self.fit_btn = QPushButton("Fit to Points")
+        self.left_panel.addWidget(self.fit_btn)
+
         self.left_panel.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
         
         self.status_bar = QStatusBar()
