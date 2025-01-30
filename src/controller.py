@@ -41,17 +41,23 @@ class MainController:
             QMessageBox.warning(self.view, "Input Error", f"Invalid range values: {e}")
             return
 
-        x_values = np.linspace(x_min, x_max, 400)
+        x_values = np.linspace(x_min, x_max, 1000)
         y_fx = self.model.evaluate(self.model.fx, x_values)
         y_gx = self.model.evaluate(self.model.gx, x_values)
+        
+        if np.isscalar(y_fx):
+            y_fx = np.full_like(x_values, y_fx)
+
+        if np.isscalar(y_gx):
+            y_gx = np.full_like(x_values, y_gx)
 
         ax = self.view.figure.gca()
         ax.clear()
-
         if y_fx is not None:
             ax.plot(x_values, y_fx, label="f(x)", color="blue")
         if y_gx is not None:
             ax.plot(x_values, y_gx, label="g(x)", color="red")
+        
         ax.grid()
         ax.legend()
         self.view.canvas.draw()
@@ -61,6 +67,11 @@ class MainController:
     def solve(self):
         self.view.solutions_list.clear()
         
+        fx_input = self.view.fx_input.text()
+        gx_input = self.view.gx_input.text()
+        self.model.set_fx(fx_input)
+        self.model.set_gx(gx_input)
+
         if self.model.fx is None or self.model.gx is None:
             QMessageBox.warning(self.view, "Input Error", "Please define both f(x) and g(x) before solving.")
             return
@@ -82,7 +93,7 @@ class MainController:
             QMessageBox.information(self.view, "No Intersections", "No intersection points were found.")
         else:
             for x, y in intersections:
-                solution_text = f"x = {x:.6f}, y = {y:.6f}"
+                solution_text = f"x = {x:.4f}, y = {y:.4f}"
                 self.view.solutions_list.addItem(solution_text)
         
         ax = self.view.figure.gca()
@@ -90,7 +101,13 @@ class MainController:
         ax.clear()
         y_fx = self.model.evaluate(self.model.fx, x_values)
         y_gx = self.model.evaluate(self.model.gx, x_values)
+        
+        if np.isscalar(y_fx):
+            y_fx = np.full_like(x_values, y_fx)
 
+        if np.isscalar(y_gx):
+            y_gx = np.full_like(x_values, y_gx)
+            
         if y_fx is not None:
             ax.plot(x_values, y_fx, label="f(x)", color="blue")
         if y_gx is not None:
