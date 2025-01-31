@@ -39,7 +39,7 @@ PyMathPlot is a Python application for plotting mathematical functions and findi
 
 ## Screenshot
 
-![PyMathPlot Screenshot](Examples/Images/Working Example.png)
+![PyMathPlot Screenshot](Examples/Images/working_example.png)
 
 ## Project Structure
 
