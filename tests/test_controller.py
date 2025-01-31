@@ -60,7 +60,8 @@ class TestMainController:
         view.gx_input.text.return_value = "x"
         view.xmin_input.text.return_value = "-5"
         view.xmax_input.text.return_value = "5"
-        
+        view.accuracy_combo.currentText.return_value = "High"
+        view.method_combo.currentText.return_value = "Symbolic"
         view.figure.gca.return_value = Mock()
         view.canvas.draw = Mock()
         
