@@ -2,6 +2,7 @@ from PySide2.QtCore import Qt
 from PySide2.QtWidgets import (
     QComboBox, QWidget, QHBoxLayout, QVBoxLayout, QGridLayout, QLabel, QPushButton,
     QLineEdit, QGroupBox, QSpacerItem, QSizePolicy, QMenuBar, QMenu, QAction, QStatusBar, QListWidget, QMainWindow
+    ,QMessageBox
 )
 from PySide2.QtGui import QIntValidator
 import matplotlib.pyplot as plt
@@ -101,7 +102,7 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
         self.status_bar = QStatusBar()
         self.setStatusBar(self.status_bar)  # Set the status bar to the main window
 
-        self.apply_styles()
+        self._apply_styles()
 
         self.figure = plt.figure()
         self.canvas = FigureCanvas(self.figure)
@@ -110,9 +111,13 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
         self.toolbar = NavigationToolbar(self.canvas, self)
 
         self.plot_layout = QVBoxLayout()
+        self.toolbar_layout = QHBoxLayout()  
+        self.toolbar_layout.addStretch()
+        self.toolbar_layout.addWidget(self.toolbar) 
+        self.toolbar_layout.addStretch()
         self.plot_layout.addWidget(self.canvas)
-        self.plot_layout.addWidget(self.toolbar)
-
+        self.plot_layout.addLayout(self.toolbar_layout)
+        
         self.main_layout.addLayout(self.left_panel, 1)
         self.main_layout.addLayout(self.plot_layout, 3)
 
@@ -128,11 +133,18 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
         self.help_menu = self.menu_bar.addMenu('Help')
         self.about_action = QAction('About', self)
         self.help_menu.addAction(self.about_action)
+        self.usage_notes_action = QAction('Usage Notes', self)
+        self.help_menu.addAction(self.usage_notes_action)
+        self.usage_notes_action.triggered.connect(self._show_usage_notes)
+        self.about_action.triggered.connect(self._show_about)
 
         self.exit_action.triggered.connect(self.close)
 
-    def apply_styles(self):
+    def _apply_styles(self):
         self.setStyleSheet("""
+            QWidget {
+                background-color: white;
+            }
             QLabel {
                 font-size: 14px;
             }
@@ -156,3 +168,18 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
                 font-size: 14px;
             }
         """)
+    
+    def _show_usage_notes(self):
+        QMessageBox.information(self, "Usage Notes", 
+            "Plot Range\n"
+            "   - X min: The minimum value of the x-axis for the plot.\n"
+            "   - X max: The maximum value of the x-axis for the plot.\n"
+            "   - Ensure that X min is less than X max to avoid input errors.\n\n"
+            "Plotting Accuracy\n"
+            "   -Low: Uses fewer points for plotting, resulting in faster performance but lower accuracy.\n"
+            "   -Medium: A balance between performance and accuracy.\n"
+            "   -High: Uses more points for plotting, resulting in higher accuracy but slower performance."
+        )
+
+    def _show_about(self):
+        QMessageBox.information(self, "About", "PyMathPlot is a Python application for plotting mathematical functions and finding their intersections.")
