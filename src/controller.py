@@ -1,5 +1,6 @@
 from PySide2.QtCore import Slot
-from PySide2.QtWidgets import QMessageBox
+from PySide2.QtWidgets import QMessageBox, QFileDialog
+
 import numpy as np
 import math
 import matplotlib.ticker as ticker
@@ -14,6 +15,7 @@ class MainController:
         self.view.fx_plot_btn.clicked.connect(self.plot_fx)
         self.view.gx_plot_btn.clicked.connect(self.plot_gx)
         self.view.fit_btn.clicked.connect(self.fit_to_solution)
+        self.view.save_action.triggered.connect(self.save_solution)
 
     def _validate_range(self):
         try:
@@ -210,3 +212,28 @@ class MainController:
         ax.grid()        
         self.view.canvas.draw()  
         self.view.status_bar.showMessage("Reset complete.", 5000)
+
+    
+
+    @Slot()
+    def save_solution(self):
+        # Open file dialog to choose save location and filename
+        file_path, _ = QFileDialog.getSaveFileName(
+            self.view, 
+            "Save Plot", 
+            "", 
+            "PNG Files (*.png);;All Files (*)"
+        )
+        
+        # Check if a file path was selected
+        if file_path:
+            try:
+                # Save the figure to the selected file path
+                self.ax.figure.savefig(file_path, bbox_inches='tight')
+                self.view.status_bar.showMessage(f"Plot saved to {file_path}", 5000)
+            except Exception as e:
+                QMessageBox.warning(
+                    self.view, 
+                    "Save Error", 
+                    f"Could not save the plot: {str(e)}"
+                )
