@@ -12,10 +12,10 @@ class FunctionModel:
   
 
     def set_fx(self, expression):
-        self.fx = self._parse_function(expression)
+        self.fx = self.parse_function(expression)
 
     def set_gx(self, expression):
-        self.gx = self._parse_function(expression)
+        self.gx = self.parse_function(expression)
 
     def evaluate(self, func, x_values):
         if func is None:
@@ -29,7 +29,7 @@ class FunctionModel:
             print(f"Error evaluating function: {e}")
             return None
 
-    def _parse_function(self, expression):
+    def parse_function(self, expression):
         if expression is None:
             return None
         expression = expression.strip()
@@ -61,9 +61,11 @@ class FunctionModel:
         x_max = max(x_vals)
         try:
             X = solve(self.fx - self.gx, self.x)
+            X = [sol for sol in X if sol.is_real]
         except Exception as e:
             QMessageBox.warning(None, "Solving Error", f"Unable to solve the equation f(x) = g(x): {e}")
             return []
+        print(X)
         X = [float(i) for i in X]
         for x in X:
             y = float(self.gx.subs(self.x, x))
