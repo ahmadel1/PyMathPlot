@@ -1,6 +1,8 @@
 from PySide2.QtCore import Slot
 from PySide2.QtWidgets import QMessageBox
 import numpy as np
+import math
+import matplotlib.ticker as ticker
 
 class MainController:
     def __init__(self, model, view):
@@ -47,6 +49,27 @@ class MainController:
         if y_gx is not None:
             ax.plot(x_values, y_gx, label="g(x)", color="red")
         return ax
+    
+
+    def _format_si(self, value, _=1):
+        si_prefixes = [
+            (-18, 'a'), (-15, 'f'), (-12, 'p'), (-9, 'n'),
+            (-6, 'µ'), (-3, 'm'), (0, ''), (3, 'k'),
+            (6, 'M'), (9, 'G'), (12, 'T'), (15, 'P'),
+            (18, 'E'), (21, 'Z'), (24, 'Y')
+        ]
+        if value == 0:
+            return "0 "  # Special case for zero
+
+        abs_value = abs(value)
+        exponent = math.floor(math.log10(abs_value))
+        si_exponent = min(max((exponent // 3) * 3, -18), 24)
+        scaled_value = round(value / 10**si_exponent, 1)
+
+        # Use list indexing for lookup
+        prefix = si_prefixes[(si_exponent + 18) // 3][1]
+
+        return f"{scaled_value:.1f}{prefix}"
                 
     @Slot()
     def plot_fx(self):
@@ -89,6 +112,8 @@ class MainController:
             
         ax.grid()
         ax.legend()
+        ax.xaxis.set_major_formatter(ticker.FuncFormatter(self._format_si))
+        ax.yaxis.set_major_formatter(ticker.FuncFormatter(self._format_si))
         self.view.canvas.draw()
         self.view.status_bar.showMessage("Plot updated.", 5000)
 
@@ -150,6 +175,8 @@ class MainController:
         ax.grid()
         self._annotate_solutions(ax)
         ax.legend()
+        ax.xaxis.set_major_formatter(ticker.FuncFormatter(self._format_si))
+        ax.yaxis.set_major_formatter(ticker.FuncFormatter(self._format_si))
         self.view.canvas.draw()
         self.view.status_bar.showMessage("Intersection points found and plotted.", 5000)
 
