@@ -128,13 +128,15 @@ class MainController:
             return
 
         x_values = np.linspace(x_min, x_max, 1000)
-        intersections, error = self.model.find_intersections(x_values)
+        intersections, error = self.model.find_intersections_symbolic(x_values)
         
-        if error:
+        if error == "There are Infinite number of solutions found":
+            self.view.solutions_list.addItem("Infinite number of solutions found")
+            QMessageBox.information(self.view, "Infinite Solutions", "There are Infinite number of solutions found.")
+        elif error:
             QMessageBox.warning(self.view, "Solving Error", error)
             return
-            
-        if not intersections:
+        elif not intersections:
             self.view.solutions_list.addItem("No solutions found.")
             QMessageBox.information(self.view, "No Intersections", "No intersection points were found.")
         else:

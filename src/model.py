@@ -65,23 +65,29 @@ class FunctionModel:
         
         return expr
 
-    def find_intersections(self, x_vals):
+    def find_intersections_symbolic(self, x_vals):
         self.intersections = []
         if self.fx is None or self.gx is None:
             return [], None
-            
-        x_min = min(x_vals)
-        x_max = max(x_vals)
+        if self.fx == self.gx:
+            return [], "There are Infinite number of solutions found"
+        
+        x_vals = np.array(x_vals, dtype=np.float64)
+        x_min, x_max = np.min(x_vals), np.max(x_vals)
+        
         try:
-            X = solve(self.fx - self.gx, self.x)
-            X = [sol for sol in X if sol.is_real]
-            X = [float(i) for i in X]
+            symbolic_roots = solve(self.fx - self.gx, self.x)
+            symbolic_roots = [sol for sol in symbolic_roots if sol.is_real]
             
-            for x in X:
-                if x_min <= x <= x_max:
-                    y = float(self.gx.subs(self.x, x))
-                    self.intersections.append((x, y))
+            for root in symbolic_roots:
+                x_root_float = float(root.evalf())
+                
+                if x_min - 1e-9 <= x_root_float <= x_max + 1e-9:
+                    y_root = self.evaluate(self.fx, [x_root_float])        
+                    if y_root is not None and len(y_root) > 0 and not np.isnan(y_root[0][0]):
+                        self.intersections.append((x_root_float, y_root[0][0]))     
             return self.intersections, None
+        
         except Exception as e:
             return [], f"Unable to solve the equation f(x) = g(x): {str(e)}"
 

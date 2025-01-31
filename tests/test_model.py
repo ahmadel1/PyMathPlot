@@ -79,32 +79,31 @@ def test_evaluate_complex_expression(function_model):
     assert err is None
     np.testing.assert_array_almost_equal(y_vals, [1, 1])
 
-
-def test_find_intersections_no_functions(function_model):
-    intersections, err = function_model.find_intersections([0, 1, 2])
+def test_find_intersections_symbolic_no_functions(function_model):
+    intersections, err = function_model.find_intersections_symbolic([0, 1, 2])
     assert len(intersections) == 0
     assert err is None
 
-def test_find_intersections_with_intersection(function_model):
+def test_find_intersections_symbolic_with_intersection(function_model):
     function_model.set_fx("x")
     function_model.set_gx("-x")
-    intersections, err = function_model.find_intersections([-10, 0, 10])
+    intersections, err = function_model.find_intersections_symbolic([-10, 0, 10])
     assert err is None
     assert len(intersections) > 0
     assert (0.0,0.0) in intersections 
 
-def test_find_intersections_no_intersection(function_model):
+def test_find_intersections_symbolic_no_intersection(function_model):
     function_model.set_fx("x + 1")
     function_model.set_gx("x - 1")
-    intersections, err = function_model.find_intersections([0, 1])
+    intersections, err = function_model.find_intersections_symbolic([0, 1])
     assert err is None
     assert len(intersections) == 0
 
-def test_find_intersections_outside_range(function_model):
+def test_find_intersections_symbolic_outside_range(function_model):
     function_model.set_fx("x")
     function_model.set_gx("x")
-    intersections, err = function_model.find_intersections([1, 2])  # intersection at x=0 is outside range
-    assert err is None
+    intersections, err = function_model.find_intersections_symbolic([1, 2])
+    assert err == "There are Infinite number of solutions found"
     assert len(intersections) == 0
 
 def test_get_intersection_view_bounds_no_intersections(function_model):
