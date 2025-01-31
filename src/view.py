@@ -111,13 +111,9 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
         self.toolbar = NavigationToolbar(self.canvas, self)
 
         self.plot_layout = QVBoxLayout()
-        self.toolbar_layout = QHBoxLayout()  
-        self.toolbar_layout.addStretch()
-        self.toolbar_layout.addWidget(self.toolbar) 
-        self.toolbar_layout.addStretch()
         self.plot_layout.addWidget(self.canvas)
-        self.plot_layout.addLayout(self.toolbar_layout)
-        
+        self.plot_layout.addWidget(self.toolbar)
+
         self.main_layout.addLayout(self.left_panel, 1)
         self.main_layout.addLayout(self.plot_layout, 3)
 
@@ -142,9 +138,6 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
 
     def _apply_styles(self):
         self.setStyleSheet("""
-            QWidget {
-                background-color: white;
-            }
             QLabel {
                 font-size: 14px;
             }
