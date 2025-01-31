@@ -181,7 +181,12 @@ class MainController:
 
         num_points = self._get_plot_points()
         x_values = np.linspace(x_min, x_max, num_points)
-        intersections, error = self.model.find_intersections_symbolic(x_values)
+        if self.view.method_combo.currentText() == "Symbolic":
+            intersections, error = self.model.find_intersections_symbolic(x_values)
+        elif self.view.method_combo.currentText() == "Numerical":
+            print("numerical")
+            intersections, error = self.model.find_intersections_numerical(x_values)
+
         
         if error == "There are Infinite number of solutions found":
             self.view.solutions_list.addItem("Infinite number of solutions found")

@@ -1,5 +1,6 @@
 from sympy import symbols, sympify, lambdify, solve, exp, pi
 import numpy as np
+from scipy.optimize import brentq
 
 class FunctionModel:
     def __init__(self):
@@ -90,6 +91,41 @@ class FunctionModel:
         
         except Exception as e:
             return [], f"Unable to solve the equation f(x) = g(x): {str(e)}"
+    
+    def find_intersections_numerical(self, x_vals, tol=1e-6):
+        self.intersections = []
+        if self.fx is None or self.gx is None:
+            return [], None
+        if self.fx == self.gx:
+            return [], "There are infinite solutions"
+
+        x_vals = np.array(x_vals, dtype=np.float64)
+        x_min, x_max = x_vals.min(), x_vals.max()
+
+        def diff_func(x):
+            fx = self.evaluate(self.fx, x)
+            gx = self.evaluate(self.gx, x)
+            fx = fx[0] if isinstance(fx, (list, tuple, np.ndarray)) else fx
+            gx = gx[0] if isinstance(gx, (list, tuple, np.ndarray)) else gx
+            return fx - gx
+
+        diff_vals = np.array([diff_func(x) for x in x_vals])
+        sign_changes = np.where(np.diff(np.sign(diff_vals)))[0]
+
+        for i in sign_changes:
+            x_left, x_right = x_vals[i], x_vals[i + 1]
+            try:
+                root = brentq(diff_func, x_left, x_right, xtol=tol)
+                if x_min - 1e-9 <= root <= x_max + 1e-9:
+                    y_root = self.evaluate(self.fx, root)
+                    y_root = y_root[0] if isinstance(y_root, (list, tuple, np.ndarray)) else y_root
+                    if y_root is not None and not np.isnan(y_root):
+                        self.intersections.append((root, y_root))
+            except ValueError:
+                continue
+
+        return self.intersections, None
+
 
     def get_intersection_view_bounds(self):
         if not self.intersections:

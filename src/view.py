@@ -52,6 +52,20 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
         self.accuracy_group = QGroupBox("Plotting Accuracy")
         self.accuracy_layout = QHBoxLayout()
 
+        self.methods_group = QGroupBox("Solving Method")
+        self.methods_layout = QHBoxLayout()
+
+        self.method_label = QLabel("Method: ")
+        self.method_combo = QComboBox()
+        self.method_combo.addItems(["Numerical", "Symbolic"])
+        self.method_combo.setCurrentText("Symbolic")
+
+        self.methods_layout.addWidget(self.method_label)
+        self.methods_layout.addWidget(self.method_combo)
+        self.methods_group.setLayout(self.methods_layout)
+        self.left_panel.addWidget(self.methods_group)
+
+
         self.accuracy_label = QLabel("Accuracy:")
         self.accuracy_combo = QComboBox()
         self.accuracy_combo.addItems(["Low", "Medium", "High"])
@@ -59,7 +73,6 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
 
         self.accuracy_layout.addWidget(self.accuracy_label)
         self.accuracy_layout.addWidget(self.accuracy_combo)
-
         self.accuracy_group.setLayout(self.accuracy_layout)
         self.left_panel.addWidget(self.accuracy_group)
 
@@ -100,7 +113,7 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
         self.left_panel.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
         self.status_bar = QStatusBar()
-        self.setStatusBar(self.status_bar)  # Set the status bar to the main window
+        self.setStatusBar(self.status_bar) 
 
         self._apply_styles()
 
