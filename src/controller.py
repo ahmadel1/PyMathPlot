@@ -73,6 +73,30 @@ class MainController:
 
         return f"{scaled_value:.1f}{prefix}"
                 
+    def _get_plot_points(self):
+        """Calculate number of points based on range and accuracy setting"""
+        try:
+            x_min = float(self.view.xmin_input.text())
+            x_max = float(self.view.xmax_input.text())
+            range_size = abs(x_max - x_min)
+
+            accuracy = self.view.accuracy_combo.currentText()
+
+            # Base number of points for different accuracies
+            points_map = {
+                "Low": 100,
+                "Medium": 500,
+                "High": 1000
+            }
+
+            # Adjust points based on range size
+            base_points = points_map[accuracy]
+            range_factor = max(1, range_size / 20)  # Normalize to a standard range of 20
+            return int(base_points * range_factor)
+
+        except ValueError:
+            return 1000  # fallback
+            
     @Slot()
     def plot_fx(self):
         fx_input = self.view.fx_input.text()
@@ -107,7 +131,8 @@ class MainController:
         if x_min is None or x_max is None:
             return
             
-        x_values = np.linspace(x_min, x_max, 100)
+        num_points = self._get_plot_points()
+        x_values = np.linspace(x_min, x_max, num_points)
         ax = self._plot_functions(x_values)
         if ax is None:
             return
@@ -154,7 +179,8 @@ class MainController:
         if x_min is None or x_max is None:
             return
 
-        x_values = np.linspace(x_min, x_max, 1000)
+        num_points = self._get_plot_points()
+        x_values = np.linspace(x_min, x_max, num_points)
         intersections, error = self.model.find_intersections_symbolic(x_values)
         
         if error == "There are Infinite number of solutions found":

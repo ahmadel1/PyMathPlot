@@ -1,6 +1,6 @@
 from PySide2.QtCore import Qt
 from PySide2.QtWidgets import (
-    QApplication, QWidget, QHBoxLayout, QVBoxLayout, QGridLayout, QLabel, QPushButton,
+    QComboBox, QWidget, QHBoxLayout, QVBoxLayout, QGridLayout, QLabel, QPushButton,
     QLineEdit, QGroupBox, QSpacerItem, QSizePolicy, QMenuBar, QMenu, QAction, QStatusBar, QListWidget, QMainWindow
 )
 from PySide2.QtGui import QIntValidator
@@ -47,6 +47,20 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
 
         self.range_group = QGroupBox("Plot Range")
         self.range_layout = QGridLayout()
+        
+        self.accuracy_group = QGroupBox("Plotting Accuracy")
+        self.accuracy_layout = QHBoxLayout()
+
+        self.accuracy_label = QLabel("Accuracy:")
+        self.accuracy_combo = QComboBox()
+        self.accuracy_combo.addItems(["Low", "Medium", "High"])
+        self.accuracy_combo.setCurrentText("Medium")
+
+        self.accuracy_layout.addWidget(self.accuracy_label)
+        self.accuracy_layout.addWidget(self.accuracy_combo)
+
+        self.accuracy_group.setLayout(self.accuracy_layout)
+        self.left_panel.addWidget(self.accuracy_group)
 
         self.xmin_label = QLabel("X min:")
         self.xmin_input = QLineEdit("-10")
@@ -110,17 +124,6 @@ class MainWindow(QMainWindow):  # Inherit from QMainWindow
         self.file_menu.addAction(self.save_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.exit_action)
-
-        self.accuracy_menu = self.menu_bar.addMenu('Accuracy')
-        self.low_action = QAction('low', self)
-        self.medium_action = QAction('medium', self)
-        self.high_action = QAction('high', self)
-        self.accuracy_menu.addAction(self.low_action)
-        self.file_menu.addSeparator()
-        self.accuracy_menu.addAction(self.medium_action)
-        self.file_menu.addSeparator()
-        self.accuracy_menu.addAction(self.high_action)
-
 
         self.help_menu = self.menu_bar.addMenu('Help')
         self.about_action = QAction('About', self)
