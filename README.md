@@ -1,3 +1,5 @@
+# PyMathPlot
+
 PyMathPlot is a Python application for plotting mathematical functions and finding their intersections. It provides a graphical user interface (GUI) built with PySide2 and uses SymPy for symbolic mathematics and Matplotlib for plotting.
 
 ## Features
@@ -11,7 +13,7 @@ PyMathPlot is a Python application for plotting mathematical functions and findi
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/pymathplot.git
+    git clone https://github.com/ahmadel1/pymathplot.git
     cd pymathplot
     ```
 
@@ -34,6 +36,10 @@ PyMathPlot is a Python application for plotting mathematical functions and findi
     ```
 
 2. Use the GUI to input functions, set the plot range, and perform actions such as plotting functions, finding intersections, and saving the plot.
+
+## Screenshot
+
+![PyMathPlot Screenshot](Images/Example1.png)
 
 ## Project Structure
 
