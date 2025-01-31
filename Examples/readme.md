@@ -28,9 +28,16 @@
   - The computation time is currently long for these functions.
   - This issue will be addressed and optimized in future updates.
 
-### 5. Cannot Solve
+### 5. Cannot Solve (solved in new update)
 ![Cannot Solve](Images/cannot_solve.png)
 - **Description**: This image shows the plot of two functions, f(x) = x^2 and g(x) = log10(x), which cannot be solved symbolically and should be solved numerically.
 - **Disadvantages**:
   - The current implementation cannot solve these functions symbolically.
   - Numerical solutions will be implemented in future updates.
+
+### 6. Numerical Method Example
+![Numerical Method Example](Images/numerical_method_example.png)
+- **Description**: This image shows the plot of two functions, f(x) = 5^(x-10) and g(x) = log10(x), solved using the newly implemented numerical method.
+- **Features Demonstrated**:
+  - Plotting of functions that require numerical solutions.
+  - Successful identification and display of intersection points using numerical methods.
