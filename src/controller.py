@@ -206,7 +206,13 @@ class MainController:
         ax.xaxis.set_major_formatter(ticker.FuncFormatter(self._format_si))
         ax.yaxis.set_major_formatter(ticker.FuncFormatter(self._format_si))
         self.view.canvas.draw()
-        self.view.status_bar.showMessage("Intersection points found and plotted.", 5000)
+        if not len(intersections) == 0:
+            self.view.status_bar.showMessage("Intersection points found and plotted.", 5000)
+        elif error == "There are Infinite number of solutions found":
+            self.view.status_bar.showMessage("Infinite number of solutions found", 5000)
+        else: 
+            self.view.status_bar.showMessage("no solutions found", 5000)
+
 
     @Slot()
     def fit_to_solution(self):
